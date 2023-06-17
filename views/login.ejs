@@ -1,0 +1,35 @@
+<%- include('./_frame/header.ejs') %>
+<%- include('./_frame/menu.ejs') %>
+
+	<div class="main p-3 ">
+				<!-- Button trigger modal -->
+  <a href="" data-bs-toggle="modal" data-bs-target="#loginModal">login</a>
+  <!-- Modal -->
+  <form id="loginForm" class="p-4">
+    <div class="modal fade " id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="loginModalLabel">Login</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-floating">
+              <input class="form-control" type="text" placeholder="Username" name="username" id="username" required>
+              <label for="username">Username</label>
+            </div>
+            <div class="form-floating">
+              <input class="form-control" type="password" placeholder="Password" name="password" id="password" required>
+              <label for="password">Password</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <input type="hidden" name="login" value="login">
+            <button class="btn btn-primary" type="submit">Login</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<%- include('./_frame/footer.ejs') %>

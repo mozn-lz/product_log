@@ -1,0 +1,206 @@
+<%- include('./_frame/header.ejs') %>
+<%- include('./_frame/menu.ejs') %>
+
+<!-- <button onclick="onUpdateProduct()" >UpdateProduct</button>
+<button onclick="onUpdateQty()" >UpdateQty</button>
+<button onclick="onSaveNewProduct()" >SaveNewProduct</button>
+<button onclick="onPriceUpdate()" >PriceUpdate</button> -->
+	<div class="main p-3 ">
+		<!-- intro section -->
+		<section class="pt-3 pb-5 ">
+			<h1 class="text-center m-5 ">Welcome to Fairline Store</h1>
+			<!-- <div class="login text-center "><button type="link" class="btn btn-primary small" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button></div> -->
+		</section>
+
+		<section>
+			<div class="text-center">opts</div>
+			<%- include('./search.ejs')%>
+			<div class="list">
+				<button	type="button"	class="btn btn-primary mt-2 mb-2" data-bs-toggle="modal" data-bs-target="#newProductModal">new</button>
+				<div class="products p-1">
+					<% if (products && products.length)  { %>
+						<% products.forEach(product => { %><!-- Button trigger modal -->
+							<div class="m-2 p-1 border border-1">
+								<a href="#" onclick="selectProduct(<%= product.id %>)" data-bs-toggle="modal" data-bs-target="#updateRemainingModal">
+									<div class="name col-8 p-1"><%= product.name %></div>
+									<div class="options col-3">
+										<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProductModal" onclick="selectProduct(<%= product.id %>)">Edit</button>
+										<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#priceModal" onclick="selectProduct(<%= product.id %>)">Price</button>
+									</div>
+								</a>
+							</div>
+						<% }); %>
+					<% } else { %><p class="h5 text-center">no products found</p><% } %>
+				</div>
+			</div>
+		</section>
+	</div>
+
+	<div class="modals">
+		<!-- Modal => update Remaining -->
+		<div class="modal fade" id="updateRemainingModal" tabindex="-1" aria-labelledby="updateRemainingModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="updateRemainingModalLabel"></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div class="form-floating">
+							<!-- todo: form control for numbers only -->
+							<input type="text" name="remainingUpdate" id="remainingUpdate" class="form-control" placeholder="remaining"/>
+							<label for="remainingUpdate">remaining</label>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick=resetSelected()>Close</button> -->
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary" onclick=onPriceUpdate()>Update</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal => set price -->
+		<div class="modal fade" id="priceModal" tabindex="-1" aria-labelledby="priceModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="priceModalLabel">selected.name</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form action="">
+							<div class="form-floating">
+								<input type="text" name="product_cost" id="product_cost" placeholder="product_cost" class="form-control"/>
+								<label for="cost">cost</label>
+							</div>
+							<div class="form-floating">
+								<input type="text" name="product_selling" id="product_selling" placeholder="product_selling" class="form-control"/>
+								<label for="selling">selling</label>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick=resetSelected()>Close</button>
+						<button type="button" class="btn btn-primary" onclick="onUpdateProduct()">Update</button >
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal => editProduct -->
+		<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true" >
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="editProductModalLabel">selected.name</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form action="">
+							<div class="form-floating">
+								<input type="text" name="name" id="name" placeholder="name" class="form-control"/>
+								<label for="name">name</label>
+							</div>
+							<div class="form-floating">
+								<input type="text" name="category" id="category" placeholder="category" class="form-control"/>
+								<label for="category">category</label>
+							</div>
+							<div class="form-floating">
+								<input type="text" name="shelf" id="shelf" placeholder="shelf" class="form-control"/>
+								<label for="shelf">shelf</label>
+							</div>
+							<div class="form-floating">
+								<input type="text" name="remaining" id="remaining" placeholder="remaining" class="form-control"/>
+								<label for="remaining">remaining</label>
+							</div>
+							<div class="form-floating">
+								<input type="text" name="watch_qty" id="watch_qty" placeholder="watch_qty" class="form-control"/>
+								<label for="watch_qty">watch_qty</label>
+							</div>
+							<div class="form-floating">
+								<input type="text" name="pack_qty" id="pack_qty" placeholder="pack_qty" class="form-control"/>
+								<label for="pack_qty">pack_qty</label>
+							</div>
+							<div class="form-floating">
+								<input type="text" name="cost" id="cost" placeholder="cost" class="form-control"/>
+								<label for="cost">cost</label>
+							</div>
+							<div class="form-floating">
+								<input type="text" name="selling" id="selling" placeholder="selling" class="form-control"/>
+								<label for="selling">selling</label>
+							</div>
+							<div class="form-floating">
+								<input type="text" name="priority" id="priority" placeholder="priority" class="form-control"/>
+								<label for="priority">priority</label>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick=resetSelected()>Close</button >
+						<button type="button" class="btn btn-primary" onclick="onUpdateProduct()">Update</button >
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal => New Product -->
+		<div class="modal fade" id="newProductModal" tabindex="-1" aria-labelledby="newProductModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="newProductModalLabel">New Product</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form action="">
+							<div class="form-floating">
+								<input type="text" name="Name" id="Name" placeholder="Name" class="form-control"/>
+								<label for="Name">name</label>
+							</div>
+							<div class="form-floating">
+								<input type="text" name="Category" id="Category" placeholder="Category" bind:value={newProd.Category} class="form-control"/>
+								<label for="Category">category</label>
+							</div>
+							<div class="form-floating">
+								<input type="text" name="Shelf" id="Shelf" placeholder="Shelf" class="form-control"/>
+								<label for="Shelf">shelf</label>
+							</div>
+							<div class="form-floating">
+								<input type="text" name="Remaining" id="Remaining" placeholder="Remaining" class="form-control"/>
+								<label for="Remaining">remaining</label>
+							</div>
+							<div class="form-floating">
+								<input type="text" name="Watch_qty" id="Watch_qty" placeholder="Watch_qty" class="form-control"/>
+								<label for="Watch_qty">watch_qty</label>
+							</div>
+							<div class="form-floating">
+								<input type="text" name="Pack_qty" id="Pack_qty" placeholder="Pack_qty" class="form-control"/>
+								<label for="Pack_qty">pack_qty</label>
+							</div>
+							<div class="form-floating">
+								<input type="text" name="Cost" id="Cost" placeholder="Cost" class="form-control"/>
+								<label for="Cost">cost</label>
+							</div>
+							<div class="form-floating">
+								<input type="text" name="Selling" id="Selling" placeholder="Selling" class="form-control"/>
+								<label for="Selling">selling</label>
+							</div>
+							<div class="form-floating">
+								<input type="text" name="Priority" id="Priority" placeholder="Priority" class="form-control"/>
+								<label for="Priority">priority</label>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick=resetSelected()>Close</button>
+						<button type="button" class="btn btn-primary" onclick=onSaveNewProduct()>Save</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="/javascripts/idx.js"></script>
+<script></script>
+<%- include('./_frame/footer.ejs') %>

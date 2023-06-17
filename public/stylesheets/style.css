@@ -1,0 +1,68 @@
+body {
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+.inline {
+  display: inline-block;
+}
+section {
+  width: 100%;
+}
+.cover {
+  background-image: url('/images/gifts.svg');
+  background-repeat: no-repeat;
+  /* width: 100px; */
+  background-size: 250px;
+  background-position-x: center;
+  background-position-x: 20%;
+}
+.main {
+  padding: 15px;
+}
+#showMessage {
+  z-index: 1069;
+}
+
+/* Make links plain */
+a {
+  color: #000000;
+  text-decoration: none;
+  color: black;
+}
+a:hover{
+  color: black;
+}
+a:active{
+  color: #0d6efd;
+}
+
+/* padding for divs in forms */
+form div {
+  padding: 3px;
+}
+
+#results .product {
+  padding-bottom: 20px;
+}
+/* button to get to the start of a page */
+#toTop {
+  position: fixed;
+  z-index: 1500;
+}
+
+#loginForm {
+  display: grid;
+  place-items: center;
+  padding-bottom: 30px;
+}
+  
+.form-group {
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+  
+fieldset {
+  padding-bottom: 20px;
+}
+label {
+  padding: 3px;
+}

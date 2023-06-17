@@ -1,0 +1,118 @@
+<%- include('./_frame/header.ejs') %>
+<%- include('./_frame/menu.ejs') %>
+
+	<div class="main p-3 ">
+		<section class="pt-3 pb-5 ">
+			<h1 class="text-center m-5 ">Welcome to Fairline Auto services</h1>
+			<div class="login text-center ">
+				<!-- Button trigger modal -->
+				<a href="" data-bs-toggle="modal" data-bs-target="#loginModal">login</a>
+
+				<!-- <button type="link" class="btn btn-primary small" data-bs-toggle="modal" data-bs-target="#loginModal">
+					Login
+				</button> -->
+			</div>
+		</section>
+		
+		<section>
+			<button class="btn btn-primary" href="" data-bs-toggle="modal" data-bs-target="#updateModal">+</button>
+			<ul class="nav nav-tabs" id="myTab" role="tablist">
+				<li class="nav-item" role="presentation"><button class="nav-link active" id="airtime-tab" data-bs-toggle="tab" data-bs-target="#airtime" type="button" role="tab" aria-controls="airtime" aria-selected="true">Airtime</button></li>
+				<li class="nav-item" role="presentation"><button class="nav-link" id="gas-tab" data-bs-toggle="tab" data-bs-target="#gas" type="button" role="tab" aria-controls="gas" aria-selected="false">Gas</button></li>
+				<li class="nav-item" role="presentation"><button class="nav-link" id="paraffin-tab" data-bs-toggle="tab" data-bs-target="#paraffin" type="button" role="tab" aria-controls="paraffin" aria-selected="false">Paraffin</button></li>
+				<li class="nav-item" role="presentation"><button class="nav-link" id="stock-tab" data-bs-toggle="tab" data-bs-target="#stock" type="button" role="tab" aria-controls="stock" aria-selected="false">Stock</button></li>
+			</ul>
+			<div class="tab-content" id="myTabContent">
+
+				<div class="tab-pane fade show active" id="airtime" role="tabpanel" aria-labelledby="airtime-tab">
+					<div class="list row">
+						<div class=" col-12 row">
+							<div class="description col-6">Des</div>
+							<div class="date col-2">30 June 2023</div>
+							<div class="amount col-2">M 8, 565.11</div>
+							<div class="balance col-2">M 34, 898.45</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="tab-pane fade" id="gas" role="tabpanel" aria-labelledby="gas-tab">...</div>
+				<div class="tab-pane fade" id="paraffin" role="tabpanel" aria-labelledby="paraffin-tab">...</div>
+				<div class="tab-pane fade" id="stock" role="tabpanel" aria-labelledby="stock-tab">...</div>
+			</div>
+		</section>
+
+		<!-- Modal -->
+		<form id="loginForm" class="p-4">
+			<div class="modal fade " id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-md">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="loginModalLabel">Login</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<div class="form-floating">
+								<input class="form-control" type="text" placeholder="Username" name="username" id="username" required>
+								<label for="username">Username</label>
+							</div>
+							<div class="form-floating">
+								<input class="form-control" type="password" placeholder="Password" name="password" id="password" required>
+								<label for="password">Password</label>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<input type="hidden" name="login" value="login">
+							<button class="btn btn-primary" type="submit">Login</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+
+		<form id="updateForm" class="p-4">
+			<div class="modal fade " id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-md">
+					<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="updateModalLabel">update</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<div class="form-floating"><input class="form-control" type="text" placeholder="Description" name="description" id="description" required><label for="description">Description</label></div>
+								<div class="form-floating"><input class="form-control" type="text" placeholder="Amount" name="amount" id="amount" required><label for="amount">Amount</label></div>
+								<div class="form-floating"><input class="form-control" type="date" placeholder="Date" name="date" id="date" disabled><label for="date">Date</label></div>
+							</div>
+							<div class="modal-footer">
+								<input type="hidden" name="update" value="update">
+								<button class="btn btn-primary" type="submit">Save</button>
+							</div>
+						</div>
+					</div>
+			</div>
+		</form>
+<script>
+	var myModal = document.getElementById('myModal');
+	var myInput = document.getElementById('myInput');
+
+	myModal.addEventListener('shown.bs.modal', function () {
+		myInput.focus()
+	})
+
+			const description = $('#description');
+			const amount = $('#amount');
+			const date = $('#date');
+
+			$('document').ready(() => {
+				let today = (`${new Date().getFullYear()}-0${new Date().getMonth()+1}-0${new Date().getDate()}`)
+				console.log(today); 
+				$('#date').val(today);
+			});
+
+
+			amount.keyup(() => {
+				if (isNaN(Number(amount.val()))) {
+					alert(`amount '${amount.val()}' is invalid`);
+				}
+			});
+</script>
+<%- include('./_frame/footer.ejs') %>
