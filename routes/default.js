@@ -81,7 +81,7 @@ router.get("/", async (req, res) => {
   .then((products) => {
     res.render("index", { title: "Fairline Auto", products });
   }).catch((err) => {
-    res.render("index", { title: "Fairline Auto", data: null });
+    res.render("index", { title: "Fairline Auto", products: null });
   });
 });
 
@@ -144,9 +144,7 @@ router.post("/get-product", async (req, res) => {
 	}
 });
 
-router.post("/update-product", async (req, res) => {
-	console.log(req.body);
-
+router.post("/update-product", (req, res) => {
 	const id = req.body.id;
 	if (req.body.newProduct) {
 		saveProduct(req, res);
