@@ -17,7 +17,7 @@ const Product = sequelize.define("product", {
 	selling     : { type: DataTypes.DOUBLE(5,2), allowNull: false },
 	priority    : { type: DataTypes.INTEGER(1), allowNull: false },
 	order_index : { type: DataTypes.INTEGER(1), allowNull: false, unique: true },
-	active      : { type: DataTypes.BOOLEAN(i), allowNull: false },
+	active      : { type: DataTypes.BOOLEAN(1), allowNull: false },
   
 });
 
