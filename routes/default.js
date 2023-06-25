@@ -6,6 +6,7 @@ const { compare } = require("./helper");
 const { Product } = require("../models/product.model");
 const { User, createUser } = require("../models/stuff.model");
 const { saveProduct, editProduct } = require("./productHelper");
+const { Stock_taking_log } = require("../models/stock_taking_log");
 
 // default pages
 let products = [
@@ -149,20 +150,31 @@ const log_remaining = async (req, id) => {
 	const remaining = req.body.edit.remaining;
 
 	const product = await Product.findByPk(id)
-	if (product && remaining >= 0) {
-		const entry = {
-			product_id: product.id,
-			itemCode: product.itemCode,
-			date: new Date.now().toLocalDateString(),
-			remaining,
-			user_id: '1',
-		}
-		// Stock_taking_log.create()
-		console.log(entry);
-	} else {
-		// log invalid input data
-		console.log('log remaining: invalid data');
-	}
+  return new Promise((resolve, reject) => {
+    if (product && remaining >= 0) {
+      const entry = {
+        product_id: product.id,
+        itemCode: product.itemCode,
+        date: new Date().toDateString(),
+        remaining,
+        user_id: '1',
+      }
+      // Stock_taking_log.create()
+      console.log(entry);
+      Stock_taking_log.create(entry)
+        .then((result) => {
+          console.log(result);
+          resolve(result)
+        }).catch((err) => {
+          console.log({err});
+          reject(err)
+        });
+    } else {
+      // log invalid input data
+      console.log('log remaining: invalid data');
+      reject('Invalid data submitted')
+    }
+  });
 }
 
 router.post("/update-product", (req, res) => {
@@ -178,8 +190,16 @@ router.post("/update-product", (req, res) => {
 		editProduct(req, res, id);
 	} else if (req.body.qty && id) {
 		console.log('qty');
+
 		log_remaining(req, id)
-		editProduct(req, res, id);
+    .then((result) => {
+      console.log('\n\tlog_remaining result: ', result);
+      res.send({ success: true, msg: 'data saved: ' + result })
+    }).catch((err) => {
+      console.log('\n\tlog_remaining err : ', err);
+      res.send({ success: false, data: null, msg: 'failed to save data: ' + err })
+    });
+		// editProduct(req, res, id);
 	} else {
 		// default return error
 		console.log('null');
