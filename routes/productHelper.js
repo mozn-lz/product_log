@@ -36,34 +36,76 @@ const get_orderIndex = (products) => {
 			return(1);
 		}
 };
+validateNum = (num) => {
+	num && num.length ? num = num.trim(): 0;
+// TODO: delete testing "console.log"
+	// console.log(`ValidateNum (${num}) :`);
+	// console.log(Number(num));
+	// console.log(!isNaN(num));
+	// console.log(num.length);
+	// console.log(Number(num) - Number(num) == 0);
 
+	return (num && (Number(num) && !isNaN(num) && num.length &&  
+		Number(num) - Number(num) == 0) ? true: false);
+}
 const editProduct = (req, res, id) => {
-	const edit = {};
-	req.body.Name ? (edit.name = req.body.Name.trim()) : 0,
-	req.body.Category ? (edit.category = req.body.Category.trim()) : 0,
-	req.body.shelf ? (edit.shelf = req.body.Shelf.trim()) : 0,
-	!isNaN(req.body.Remaining)	? (edit.remaining = req.body.Remaining.trim()) : 0,
-	!isNaN(req.body.Watch_qty)	? (edit.watch_qty = req.body.Watch_qty.trim()) : 0,
-	!isNaN(req.body.Pack_qty) ? (edit.pack_qty = req.body.Pack_qty.trim()) : 0,
-	!isNaN(req.body.Cost) ? (edit.cost = req.body.Cost.trim()) : 0,
-	!isNaN(req.body.Selling) ? (edit.selling = req.body.Selling.trim()) : 0,
-	!isNaN(req.body.Priority) ? (edit.priority = req.body.Priority.trim()) : 0;
-
-	if (edit.name ||edit.category ||edit.shelf ||edit.remaining ||
-			edit.watch_qty ||edit.pack_qty ||edit.cost ||edit.selling ||edit.priority) {
-		// update process
-		Product.update(edit, { where: { id } })
-			.then((result) => {
-				res.send({ success: false, data: result });
-			})
-			.catch((err) => {
-				res.send({ success: false, msg: `Error updating product: ${err}` });
-			});
-	} else {
-		res.send({ success: false, data: null, msg: `err: no options selected` });
-	}
-	res.send("edit works");
-};
+	const incoming = req.body.edit;
+	console.log('====================================');
+	console.log({body:incoming});
+	// console.log('remaining ', !isNaN(incoming.remaining))
+	// console.log('watch_qty ', !isNaN(incoming.watch_qty))
+	// console.log('pack_qty ', !isNaN(incoming.pack_qty))
+	console.log('cost ', validateNum(incoming.cost))
+	console.log('selling ', validateNum(incoming.selling))
+	// console.log('priority ', !isNaN(incoming.priority))
+	// console.log('itemCode ', !isNaN(incoming.itemCode))
+	console.log('====================================');
+	Product.findByPk(id)
+	.then((product) => {
+		if (!product) {
+			console.log({msg:`Product not found`});
+			res.send({ success: false, data: null, msg: `Product not found` });
+		} else {
+			console.log('\n\n\t\t100 success\n\n');
+			// console.log({product});
+			const edit = {};
+			product.name      != incoming.name			&& incoming.name							? (edit.name 			= incoming.name.trim())			: console.log('name failed');
+			product.category  != incoming.category	&& incoming.category					? (edit.category	= incoming.category.trim())	: console.log('category failed');
+			product.shelf     != incoming.shelf			&& incoming.shelf							? (edit.shelf			= incoming.shelf.trim())		: console.log('shelf failed');
+			product.remaining != incoming.remaining	&& validateNum(incoming.remaining)	? (edit.remaining = incoming.remaining.trim()): console.log('remaining failed');
+			product.watch_qty != incoming.watch_qty	&& validateNum(incoming.watch_qty)	? (edit.watch_qty = incoming.watch_qty.trim()): console.log('watch_qty failed');
+			product.pack_qty  != incoming.pack_qty	&& validateNum(incoming.pack_qty)	? (edit.pack_qty  = incoming.pack_qty.trim()) : console.log('pack_qty failed');
+			product.cost      != incoming.cost			&& validateNum(incoming.cost)			? (edit.cost      = incoming.cost.trim())     : console.log('cost failed' + !isNaN(incoming.cost));
+			product.selling   != incoming.selling		&& validateNum(incoming.selling)		? (edit.selling   = incoming.selling.trim())  : console.log('selling failed' + !isNaN(incoming.selling));
+			product.priority  != incoming.priority	&& validateNum(incoming.priority)	? (edit.priority  = incoming.priority.trim()) : console.log('priority failed' + !isNaN(incoming.priority));
+			product.itemCode  != incoming.itemCode	&& validateNum(incoming.itemCode)	? (incoming.itemCode.trim())   : console.log('itemCode failed' + !isNaN(incoming.itemCode));
+			// !isNaN(incoming.itemCode)  ? (edit.itemCode  = incoming.itemCode.trim())   : console.log('itemCode failed');
+		
+			if (edit.name ||edit.category ||edit.shelf ||edit.remaining ||
+					edit.watch_qty ||edit.pack_qty ||edit.cost ||edit.selling ||edit.priority) {
+				// update process
+				console.log('====================================');
+				console.log('Edit passed validation: ');
+				console.log(edit);
+				console.log('====================================');
+				res.send({ success: true, data: edit });
+				console.log('response sent: ' + { success: true, data: edit });
+				// Product.update(edit, { where: { id } })
+				// .then((result) => {
+				//     res.send({ success: true, data: result });
+				// 	})
+				// 	.catch((err) => {
+				// 		res.send({ success: false, msg: `Error updating product: ${err}` });
+				// 	});
+			} else {
+				res.send({ success: false, data: null, msg: `No data found` });
+			}
+		}
+	}).catch((err) => {
+		console.log({err});
+		res.send({ success: false, data: null, msg: `Product not found` });
+	});
+}
 
 const saveProduct = (req, res) => {
 	console.log("saveProduct()");
