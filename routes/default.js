@@ -77,78 +77,100 @@ let products = [
 ]; // const products = null;
 
 router.get("/", async (req, res) => {
-  Product.findAll()
-  .then((products) => {
-    res.render("index", { title: "Fairline Auto", products });
-  }).catch((err) => {
-    res.render("index", { title: "Fairline Auto", products: null });
-  });
+	Product.findAll()
+	.then((products) => {
+		res.render("index", { title: "Fairline Auto", products });
+	}).catch((err) => {
+		res.render("index", { title: "Fairline Auto", products: null });
+	});
 });
 
 router.post("/get-product", async (req, res) => {
-	const id = req.body.id;
-	const barCode = req.body.id;
-	const itemCode = req.body.id;
-	const search = req.body.id;
-	console.log(req.body.id);
+	const id				= req.body.id;
+	const barCode		= req.body.barCode;
+	const itemCode	= req.body.itemCode;
+	const search		= req.body.search;
+	console.log(req.body);
 
+  // res.send('request received');
 	if (id) {
 		// findProductById(id)
 		Product.findByPk(req.body.id)
-		.then((product) => {
-				product ?
-					res.send({ success: true, data: product }):
-					res.send({ success: false, data: null });		
-		}).catch((err) => {
+			.then((product) => {
+				product
+					? res.send({ success: true, data: product })
+					: res.send({ success: false, data: null });
+			}).catch((err) => {
 				res.send({ success: false, data: null });
-		});
-	} else if(itemCode) {
-		Product.findOne({where: {itemCode}})
-		.then((product) => {
-				product ?
-					res.send({ success: true, data: product }):
-					res.send({ success: false, data: null });		
-		}).catch((err) => {
-				res.send({ success: false, });
-		});
-	} else if(barCode) {
-		Product.findOne({where: {barCode}})
-		.then((product) => {
-				product ?
-					res.send({ success: true, data: product }):
-					res.send({ success: false, data: null });		
-		}).catch((err) => {
-				res.send({ success: false, });
-		});
-	} else if (search) {
-		Product.findAll({where: {
+			});
+	} else if (itemCode) {
+		Product.findOne({ where: { itemCode } })
+			.then((product) => {
+				product
+					? res.send({ success: true, data: product })
+					: res.send({ success: false, data: null });
+			}).catch((err) => {
+				res.send({ success: false });
+			});
+	} else if (barCode) {
+		Product.findOne({ where: { barCode } })
+			.then((product) => {
+				product
+					? res.send({ success: true, data: product })
+					: res.send({ success: false, data: null });
+			}).catch((err) => {
+				res.send({ success: false });
+			});
+	} else if (search && search.length > 0) {
+		Product.findAll({
+			where: {
 				[Op.or]: [
 					{ name: { [Op.like]: `%${search}%` } },
 					{ category: { [Op.like]: `%${search}%` } },
 					{ shelf: { [Op.like]: `%${search}%` } },
-				]
-			}
-		})
-			.then((products) => {
-				res.send({data: products, success: true})
+				],
+			},
+		}).then((products) => {
+				res.send({ data: products, success: true });
 			}).catch((err) => {
-				res.send({success: false})
+				res.send({ success: false });
 			});
 	} else {
 		Product.findAll()
 			.then((result) => {
-				res.send({data: result, success: true});
+				res.send({ data: result, success: true });
 			}).catch((err) => {
-				res.send({success: false, msg: err});
+				res.send({ success: false, msg: err });
 			});
 	}
 });
+	
+const log_remaining = async (req, id) => {
+	const remaining = req.body.edit.remaining;
+
+	const product = await Product.findByPk(id)
+	if (product && remaining >= 0) {
+		const entry = {
+			product_id: product.id,
+			itemCode: product.itemCode,
+			date: new Date.now().toLocalDateString(),
+			remaining,
+			user_id: '1',
+		}
+		// Stock_taking_log.create()
+		console.log(entry);
+	} else {
+		// log invalid input data
+		console.log('log remaining: invalid data');
+	}
+}
 
 router.post("/update-product", (req, res) => {
 	const id = req.body.id;
+	console.log('def: ',req.body);
 	if (req.body.newProduct) {
 		saveProduct(req, res);
-	} else if (req.body.edit && id) {
+	} else if (req.body.updateProduct && id) {
 		console.log('edit');
 		editProduct(req, res, id);
 	} else if (req.body.priceUpdate && id) {
@@ -156,6 +178,7 @@ router.post("/update-product", (req, res) => {
 		editProduct(req, res, id);
 	} else if (req.body.qty && id) {
 		console.log('qty');
+		log_remaining(req, id)
 		editProduct(req, res, id);
 	} else {
 		// default return error
