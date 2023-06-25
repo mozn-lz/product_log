@@ -17,7 +17,7 @@
 			<%- include('./search.ejs')%>
 			<div class="list">
 				<button	type="button"	class="btn btn-primary mt-2 mb-2" data-bs-toggle="modal" data-bs-target="#newProductModal">new</button>
-				<div class="products p-1">
+				<div id="products" class="products p-1">
 					<% if (products && products.length)  { %>
 						<% products.forEach(product => { %><!-- Button trigger modal -->
 							<div class="m-2 p-1 border border-1">
@@ -55,7 +55,7 @@
 					<div class="modal-footer">
 						<!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick=resetSelected()>Close</button> -->
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary" onclick=onPriceUpdate()>Update</button>
+						<button type="button" class="btn btn-primary" onclick=onUpdateQty()>Update</button>
 					</div>
 				</div>
 			</div>
@@ -83,7 +83,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick=resetSelected()>Close</button>
-						<button type="button" class="btn btn-primary" onclick="onUpdateProduct()">Update</button >
+						<button type="button" class="btn btn-primary" onclick="onPriceUpdate()">Update</button >
 					</div>
 				</div>
 			</div>
@@ -99,6 +99,10 @@
 					</div>
 					<div class="modal-body">
 						<form action="">
+							<div class="form-floating">
+								<input type="text" name="itemCode" id="itemCode" placeholder="itemCode" class="form-control"/>
+								<label for="itemCode">itemCode</label>
+							</div>
 							<div class="form-floating">
 								<input type="text" name="name" id="name" placeholder="name" class="form-control"/>
 								<label for="name">name</label>
